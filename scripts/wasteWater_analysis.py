@@ -23,10 +23,6 @@ class WasteWater_pipeline_worker():
         for item in [*private_cahce] :
             setattr(self,item, private_cahce[item])
     
-    def read_json(path):
-        with open(path, 'r') as json_cache:
-            full_cache = json.load(json_cache)
-        return full_cache
 
     def wastewater_pipeline(self,run_ID):
         run_date= datetime.datetime.strptime(run_ID[7:17], '%Y-%m-%d').strftime("%m%d%y")
