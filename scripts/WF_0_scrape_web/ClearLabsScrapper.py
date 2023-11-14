@@ -50,15 +50,13 @@ class ClearLabsApi():
 		#//*[@id="app"]/div/div[3]/div[1]/div[1]/nav/ul/li[5]/a/span
 		self.driver.find_element(By.XPATH,"//a[@href='/lab/runs']").click() 
 
-		run_sample_info={}
-
 		#for run in runIDs:
 			
 		self.driver.find_element(By.XPATH,'//h2[contains(.,"'+runIDs+'")]').click()
 		print("Found Run")
 		time.sleep(5)
 
-		run_sample_info[runIDs]=parse_run_data(self.driver.page_source)
+		run_sample_info=parse_run_data(self.driver.page_source)
 
 		print("Run Data Captured")
 		

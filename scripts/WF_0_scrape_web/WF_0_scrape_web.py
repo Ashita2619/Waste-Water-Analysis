@@ -22,6 +22,8 @@ def run_script_0(run_ids,res_path,download_p,cl_url,cl_username,cl_password):
     
     data_obj.close_conns()
 
+    return run_info
+
     print("\n================================\nSUCCESS - END OF SCRIPT\n================================\n\n")
 
 

@@ -26,9 +26,10 @@ class WasteWater_pipeline_worker():
 
     def wastewater_pipeline(self,run_ID):
         run_date= datetime.datetime.strptime(run_ID[7:17], '%Y-%m-%d').strftime("%m%d%y")
-        run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
+        run_specfic_data=run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
+
         #self.cache_path+"/scripts/WF_1_nextflow/wasteWater.nf"
-        run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_nextflow/wasteWater.nf",self.download_path,run_ID)
+        run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_nextflow/wasteWater.nf",self.download_path,run_ID,run_specfic_data)
         #run_script_1
         
 
