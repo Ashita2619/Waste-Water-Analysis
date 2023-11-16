@@ -2,7 +2,8 @@
 
 
     "download_path" : "/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles",
-    "waste_water_output" : "/home/ssh_user/WGS_Drive/wasteWater/output"
+    "waste_water_output" : "/home/ssh_user/WGS_Drive/wasteWater/output",
+    "nextflow_working_dir" : "/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/"
 
 
 }
