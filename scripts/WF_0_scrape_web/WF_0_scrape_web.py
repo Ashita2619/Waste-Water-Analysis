@@ -17,8 +17,8 @@ def run_script_0(run_ids,res_path,download_p,cl_url,cl_username,cl_password):
     abs_path = res_path + "/data/run_data.json"
 
     with open (abs_path,"w") as j_dump:
-        run_info = json.dumps(run_info)
-        j_dump.write(run_info)
+        temp_run_info = json.dumps(run_info)
+        j_dump.write(temp_run_info)
     
     data_obj.close_conns()
 

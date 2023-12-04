@@ -3,12 +3,11 @@ import subprocess
 
 
 
-
-
 def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,nextflow_workdir):
     print("\n================================\nNextflow Processes\n================================\n\n")
     path_to_bam= download_path+"/"+runDate+"/"+run_id+"_all_bam_and_index_files"
-
+    
+    print("Removing bad coverage Samples")
     remove_bad_samples(download_path,path_to_bam,run_datas)
 
     #first flow
@@ -28,6 +27,7 @@ def remove_bad_samples(d_path,path_to_bam_f,run_data):
             #then remove/files to failed areas
             print("HSN\t"+sample+" failed or 0 coverage")
             subprocess.run("mv "+path_to_bam_f+"/"+sample+"* "+d_path+"/failed/",shell=True)
+    print("Continuing with Nextflow")
 
 
 
