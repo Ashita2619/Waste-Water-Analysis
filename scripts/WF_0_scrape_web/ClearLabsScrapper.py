@@ -119,11 +119,11 @@ def parse_run_data(run_html):
 
 if __name__ == "__main__":
 
-	s = ClearLabsApi("/home/adrianlimagaray/Downloads","/home/adrianlimagaray/Documents/GitHub/Waste-Water") 				
+	s = ClearLabsApi("/home//Downloads","/home//Documents/GitHub/Waste-Water") 				
 	#username #PW
 	s.login("https://wgs.app.stage.clearlabs.com/","","")
 	time.sleep(10)
-	q= s.find_runs("BHRL11.2023-11-07.01")
+	q= s.find_runs("BHRL")
 
 	s.driver.close()
 
