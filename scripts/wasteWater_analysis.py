@@ -1,5 +1,5 @@
 from WF_0_scrape_web.WF_0_scrape_web import run_script_0
-from WF_1_nextflow.WF_1_Nextflow import run_script_nextflow
+from WF_1_freyja.WF_1_freyja import run_script_nextflow
 import os
 import sys
 import json
@@ -30,7 +30,7 @@ class WasteWater_pipeline_worker():
         
         run_specfic_data=run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
         
-        run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_nextflow/wasteWater.nf",self.download_path,run_ID,run_specfic_data,self.nextflow_working_dir)
+        run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_nextflow/wasteWater.nf",self.download_path,run_ID,run_specfic_data,self.nextflow_working_dir,self.referance_genome,self.waste_water_output,self.displayed_coverage)
         
         self.remove_nextflow_work()
         

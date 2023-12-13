@@ -1,9 +1,10 @@
 #!/usr/bin/env nextflow
 
-params.in = "/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/100723/*.bam"
-params.run_date = "100723"
-params.output_path="/home/ssh_user/WGS_Drive/wasteWater/output"
-params.ref = "/home/ssh_user/WGS_Drive/wasteWater/refseq/MN908947_RefSeq.fasta"
+params.in = ""
+params.run_date = ""
+params.output_path=""
+params.ref = ""
+params.cov = ""
 
 
 
@@ -72,13 +73,14 @@ process create_graphs{
 	input:
 		path demix_out
 		val run_date
+		val cov
 
 	output:
 		file "${run_date}.pdf"
 
 	script:
 	"""
-	freyja plot "${run_date}_all.tsv" --mincov 5 --output "${run_date}.pdf"
+	freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf"
 	"""
 }
 
@@ -86,7 +88,7 @@ workflow final_step{
 	//agreeate all variant files into one
 	agree_file = create_aggre(params.output_path,params.run_date)
 	//Creating final report, setting coverage to 5 to see all results
-	create_graphs(agree_file,params.run_date)
+	create_graphs(agree_file,params.run_date,params.cov)
 	
 }
 
