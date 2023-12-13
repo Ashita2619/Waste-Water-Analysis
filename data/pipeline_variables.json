@@ -5,7 +5,7 @@
     "waste_water_output" : "/home/ssh_user/WGS_Drive/wasteWater/output",
     "nextflow_working_dir" : "/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/",
     "referance_genome" : "/home/ssh_user/WGS_Drive/wasteWater/refseq/MN908947_RefSeq.fasta",
-    "displayed_coverage" : 5
+    "displayed_coverage" : "5"
 
 
 }

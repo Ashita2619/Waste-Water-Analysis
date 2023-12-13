@@ -11,10 +11,10 @@ def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,
     remove_bad_samples(download_path,path_to_bam,run_datas)
 
     #first flow
-    subprocess.run(". $CONDA_PREFIX/home/ssh_user/mambaforge/etc/profile.d/conda.sh && conda activate WasteWater && nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date "+runDate+" --ref "+ref_genome+" --output_path "+output_path+" -cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
+    subprocess.run(". $CONDA_PREFIX/home/ssh_user/mambaforge/etc/profile.d/conda.sh && conda activate WasteWater && nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date "+runDate+" --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
 
     #second flow
-    subprocess.run(". $CONDA_PREFIX/home/ssh_user/mambaforge/etc/profile.d/conda.sh && conda activate WasteWater && nextflow run "+path_to_nextflow+" -entry final_step --run_date "+runDate+" --ref "+ref_genome+" --output_path "+output_path+" -cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
+    subprocess.run(". $CONDA_PREFIX/home/ssh_user/mambaforge/etc/profile.d/conda.sh && conda activate WasteWater && nextflow run "+path_to_nextflow+" -entry final_step --run_date "+runDate+" --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
 
 
     print("\n================================\nSUCCESS - END OF SCRIPT\n================================\n\n")
@@ -23,7 +23,7 @@ def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,
 
 def remove_bad_samples(d_path,path_to_bam_f,run_data):
     for sample in [*run_data]:
-        if run_data[sample][-1] == "0%" or run_data[sample][-1] == "\u2014" :
+        if run_data[sample][-1] == "0%" or run_data[sample][-1] == "\u2014" or float(run_data[sample][-1][:-1]) <= 5  :
             #then remove/files to failed areas
             print("HSN\t"+sample+" failed or 0 coverage")
             subprocess.run("mv "+path_to_bam_f+"/"+sample+"* "+d_path+"/failed/",shell=True)
