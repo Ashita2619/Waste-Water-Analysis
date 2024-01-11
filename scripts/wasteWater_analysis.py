@@ -28,8 +28,9 @@ class WasteWater_pipeline_worker():
     def wastewater_pipeline(self,run_ID):
         run_date= datetime.datetime.strptime(run_ID[7:17], '%Y-%m-%d').strftime("%m%d%y")
         
-        run_specfic_data=run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
-
+        #run_specfic_data=run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
+        with open(self.cache_path+"/data/run_data.json") as json_file:
+            run_specfic_data = json.load(json_file)
         run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_freyja/wasteWater.nf",self.download_path,run_ID,run_specfic_data,self.nextflow_working_dir,self.referance_genome,self.waste_water_output,self.displayed_coverage)
         
         self.remove_nextflow_work()

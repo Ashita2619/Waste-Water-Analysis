@@ -27,7 +27,7 @@ process create_var{
 	script:
 
 	"""
-	freyja variants $bam --variants "${sample_id}_variant" --depths "${sample_id}_depth" --ref $referance  
+	echo ${params.run_date} |freyja variants $bam --variants "${sample_id}_variant" --depths "${sample_id}_depth" --ref $referance  
 	"""
 
 }
@@ -93,6 +93,7 @@ workflow final_step{
 }
 
 workflow{
+	NXF_DISABLE_PARAMS_TYPE_DETECTION = true
 	//Read BAM files download from ClearLabs (This is post assembly)
 	bams = Channel.fromPath(params.in)
 	//Formating files 
@@ -102,6 +103,7 @@ workflow{
 	return[prefix,file]
 	}
 	//formatted_bams.view()
+	println params.run_date
 	//Creating a variant file for each BAM file
 	create_var_ch = create_var(formatted_bams,params.output_path,params.ref,params.run_date)
 	//create_var_ch.view()
