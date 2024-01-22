@@ -1,5 +1,6 @@
 from WF_0_scrape_web.WF_0_scrape_web import run_script_0
 from WF_1_freyja.WF_1_freyja import run_script_nextflow
+from WF_2_DB.WF_2_DB_push import DB_push
 import os
 import sys
 import json
@@ -35,6 +36,10 @@ class WasteWater_pipeline_worker():
         run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_freyja/wasteWater.nf",self.download_path,run_ID,run_specfic_data,self.nextflow_working_dir,self.referance_genome,self.waste_water_output,self.displayed_coverage)
         
         self.remove_nextflow_work()
+
+        #PUSH TO DB
+        #list of HSN's to know what demographics to pull
+        #DB_push(self.cache_path,[*run_specfic_data],run_date,self.waste_water_output)
         
     def remove_nextflow_work(self):
         
