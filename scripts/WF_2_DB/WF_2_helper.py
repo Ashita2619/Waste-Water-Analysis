@@ -15,13 +15,13 @@ class demographics_import():
     def __init__(self,cache_path) : #0
         #here need to import json file
         #and used that to store
-        demo_cahce= json.load(open(cache_path+"/data/private_var.json"))
+        demo_cahce= json.load(open(cache_path+"/data/private_cache.json"))
         for item in [*demo_cahce] :
             setattr(self,item, demo_cahce[item])
         
 
     
-    def get_lims_demographics(self,hsn,date,csv_path): #1
+    def get_lims_demographics(self,hsn,date): #1
 
         self.wgs_run_date = date[:2]+"/"+date[2:4]+"/20"+date[4:]
         unfound_hsn=[]
@@ -35,64 +35,28 @@ class demographics_import():
 
         conn.close()
 
+        #format LIMS DF
+        self.lims_df = self.lims_df.rename(columns = self.demo_names)
+        
         return hsn
     
-    def format_lims_df(self): #2
-        # manipulate sql database to format accepted by the master EXCEL worksheet
-        #self.log.write_log("format_lims_DF","Manipulating demographics to database format")
-
-        self.lims_df = self.lims_df.rename(columns = self.demo_names)
-        #print(self.lims_df.head().to_string())
-        
-        self.no_lims_hsn = self.no_lims_hsn.loc[:, ~self.no_lims_hsn.columns.str.contains('^Unnamed')]
-        self.no_lims_hsn['name']=self.no_lims_hsn['First Name'] + " " + self.no_lims_hsn['Last Name']
-        self.no_lims_hsn['HSN']=self.no_lims_hsn['HSN'].astype(int)
-        self.no_lims_hsn = self.no_lims_hsn.rename(columns={"Rec'd":"date_recd","WGS Rec'd": "pcr_run_date","HSN": "hsn","Collected": "doc","DOB": "dob","Sex": "sex","State": "state","Source Site": "source","CO":"county"})
-        self.no_lims_hsn['pcr_run_date']= pd.to_datetime(self.no_lims_hsn['pcr_run_date'])
-        self.no_lims_hsn['date_recd']= pd.to_datetime(self.no_lims_hsn['date_recd'])
-        self.no_lims_hsn['dob']= pd.to_datetime(self.no_lims_hsn['dob'])
-        self.no_lims_hsn['doc']= pd.to_datetime(self.no_lims_hsn['doc'])
-        self.no_lims_hsn.drop(columns=['Extracted','Sequenced','Last Name','First Name','Age','Source Type','Country','Comment','WGS serotype','coverage (calculated from workbook)','#total reads','Clusters passing filter',"HAI WGS ID"], axis=1, inplace=True)
-
-        self.lims_df= pd.concat([self.lims_df,self.no_lims_hsn])
-
-        #self.log.write_log("format_lims_DF","Done!")
-
-
-    def create_mlst_df(self,mlst_dict):
-    #mlst  DICT {HSN:[HSN,species,overallType]}
-        #{'2296669_manualy': ['2296669_manualy', 'abaumannii_2', '2']}
-
-        self.mlst_df = pd.DataFrame.from_dict(mlst_dict,orient='index',columns=['hsn','species','mlst'])
-        self.mlst_df['hsn']=self.mlst_df['hsn'].astype(int)
-        #print(len(self.mlst_df))
-        #print(self.mlst_df.head())
-
-    def create_metrics_df(self,assembly_m,pipeline):
-        #res[sample]=sample_buso_res["results"]["one_line_summary"]
-        #assemblys  DICT {HSN:"C:98.4%[S:98.4%,D:0.0%],F:1.6%,M:0.0%,n:124"}
-        # meaning of output "Complete": 98.4, "Single copy": 98.4,"Multi copy": 0.0,"Fragmented": 1.6, "Missing": 0.0, "n_markers": 124,
-        for h in [*assembly_m]:
-            if pipeline:
-                assembly_m[h] =  assembly_m[h]
-            else:
-                assembly_m[h] =  assembly_m[h][2:6]
-            
-        self.metrics_df = pd.DataFrame.from_dict(assembly_m,orient='index',columns=['busco_out'])
-        self.metrics_df['hsn']=self.metrics_df.index.astype(int)
-        #print(len(self.metrics_df))
-        #print(self.metrics_df.head())
     
     def create_genes_df(self,found_genes_dict):
-        #found_genes DICT {HSN:[[GENE,%COV,%IDENT,DB_Used,Accession_Seq,Gene_Product,Resistance],[GENE2....]]}
+        #read in result files from Freya
+        #parse results file
+        #place each gene into a corresponding column in DATA FRAME
+
 
         self.genes_df = pd.DataFrame.from_dict(found_genes_dict, orient='index',columns=['hsn','gene','coverage','identity','db_used','accession_seq','gene_product','resistance'])
 
         self.genes_df['hsn']=self.genes_df['hsn'].astype(int)
+
         #print(len(self.genes_df))
+
         #print(self.genes_df.head())
 
-        
+    def parse_gene_output(samples,path_to_res):
+        pass        
 
     def merge_dfs(self): #3
         #will use this to merge all the different DFs 
