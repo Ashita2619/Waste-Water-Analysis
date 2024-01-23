@@ -40,38 +40,41 @@ class demographics_import():
         
         return hsn
     
+
+    def create_genes_df(self,path_to_res,runD):
+        path_to_res += "/"+runD+"/final/"+runD+"_all.tsv"
+
+        l=['Lineages_1','Lineages_2','Lineages_3','Lineages_4','Lineages_5','Lineages_6','Lineages_7','Lineages_8','Lineages_9','Lineages_10','Lineages_11','Lineages_12','Lineages_13','Lineages_14','Lineages_15']
+        a=['Abundance_1','Abundance_2','Abundance_3','Abundance_4','Abundance_5','Abundance_6','Abundance_7','Abundance_8','Abundance_9','Abundance_10','Abundance_11','Abundance_12','Abundance_13','Abundance_14','Abundance_15']
+        #open/read file
+        all_tsv = pd.read_csv(path_to_res,sep="\t")
+        #RENAME AND fix HSN
+        all_tsv = all_tsv.rename(columns={'Unnamed: 0':"HSN"})
+        all_tsv["HSN"] = [ i.split("_")[0] for i in all_tsv['HSN'].values ]
+
+        num_of_columns = len(all_tsv['lineages'].str.split(' ', n=15, expand=True).columns)
+
+        #seperate lineage and abundaNCES
+        all_tsv[l[:num_of_columns]] = all_tsv['lineages'].str.split(' ', n=15, expand=True)
+        all_tsv[a[:num_of_columns]] = all_tsv['abundances'].str.split(' ', n=15, expand=True)
+        
+       
+        #all_tsv = all_tsv[["HSN","coverage"]+l[:num_of_columns]+a[:num_of_columns]]
+        #keeping only nessaary columns
+        all_tsv = all_tsv[["HSN"]+l[:num_of_columns]+a[:num_of_columns]]
+
+        self.gene_df = all_tsv
+
+        
+        
     
-    def create_genes_df(self,found_genes_dict):
-        #read in result files from Freya
-        #parse results file
-        #place each gene into a corresponding column in DATA FRAME
-
-
-        self.genes_df = pd.DataFrame.from_dict(found_genes_dict, orient='index',columns=['hsn','gene','coverage','identity','db_used','accession_seq','gene_product','resistance'])
-
-        self.genes_df['hsn']=self.genes_df['hsn'].astype(int)
-
-        #print(len(self.genes_df))
-
-        #print(self.genes_df.head())
-
-    def parse_gene_output(samples,path_to_res):
-        pass        
-
     def merge_dfs(self): #3
         #will use this to merge all the different DFs 
-        #Demographics
-        #Run Stats
-        #MLST typing
 
-        #self.log.write_log("merge_dfs","Merging dataframes")
-        self.lims_df['hsn']=self.lims_df['hsn'].astype(int)
-        
-        self.df = pd.merge(self.lims_df, self.mlst_df, how="inner", on="hsn")
+        self.lims_df['HSN']=self.lims_df['HSN'].astype(int)
 
-        self.df = pd.merge(self.df, self.metrics_df, how="inner", on="hsn")
+        self.df = pd.merge(self.df, self.gene_df, how="inner", on="HSN")
 
-       #self.log.write_log("merge_dfs","Done")
     
     def format_dfs(self): #4
         self.df = self.df.rename(columns = self.demo_names)

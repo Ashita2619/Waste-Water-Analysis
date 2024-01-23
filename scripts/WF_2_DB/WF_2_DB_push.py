@@ -14,6 +14,11 @@ def DB_push(runner_path,sample_hsn,run_date,outfile_path):
 
     sample_hsn = import_demo.get_lims_demographics(sample_hsn,run_date)
     print("lims imported")
+
+    import_demo.create_genes_df(outfile_path,run_date)
+
+    import_demo.merge_dfs()
+
     '''
     
     #merge_mlst,demogrpahic DF together
