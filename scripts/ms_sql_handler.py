@@ -11,19 +11,14 @@ import re
 #Table = "dbo.Run_Stats"
 
 class ms_sql_handler():
-    # constructor:
+    
     def __init__(self, obj):
         self.sql_user = obj.sql_user
         self.sql_pass = obj.sql_pass
         self.sql_server = obj.sql_server
         self.sql_db = obj.sql_db
-        #self.logger = obj.logger
-       
-        self.avg_depth_cutoff = obj.avg_depth_cutoff
-        self.percent_cvg_cutoff = obj.percent_cvg_cutoff
         self.engine = None
-#        self.log = Script_Logger("SQL_Handler")
-#        self.log.start_log("Starting")
+
 
     # methods
     # Create
@@ -145,19 +140,11 @@ class ms_sql_handler():
                     pass
                 # if outside_lab or refresh, we are using full excel file, replace
                 # missing data as needed
-                if full:
-                    new_query = new_query.replace(", CAST(\'nan\' AS DATE)", "")
-                    new_query = new_query.replace(", CAST(\'None\' AS DATE)", "")
-                    new_query = new_query.replace(", \'nan\'", "")
-                    new_query = new_query.replace(", \'None\'", "")
-                    new_query = new_query.replace(", nan", "")
-                    new_query = new_query.replace(", None", "")
-                    new_query = new_query.replace(", \'extraction only, WGS\'", "")
-                    new_query = new_query.replace("other", "OT")
-                    new_query = new_query.replace("(, ", "(")
-                    new_query = new_query.replace(" KS", " Kansas")
+
                 #print(new_query)
                 #new_query = new_query.replace("\'", "")
+                new_query = new_query.replace("CAST ('None', AS DECIMAL)", "NULL")
+                new_query = new_query.replace("CAST ('NULL', AS DECIMAL)", "NULL")
                 new_query = new_query.replace(" \'nan\'", "NULL")
                 new_query = new_query.replace(" nan", "NULL")
                 #new_query = new_query.replace(", \'None\'", "")
@@ -166,10 +153,14 @@ class ms_sql_handler():
                 new_query = new_query.replace('= "",', '= NULL,')
                 new_query = new_query.replace("= \'None\',", "= NULL,")
                 new_query = new_query.replace("CAST('nan' AS DATE)", "NULL")
-                new_query = new_query.replace("luke's", 'lukes')
+                new_query = new_query.replace("CAST('NULL' AS DATE)", "NULL")
+                new_query = new_query.replace("CAST (NULL, as FLOAT)", "NULL")
+                new_query = new_query.replace("CAST ('NULL', as FLOAT)", 'NULL')
                 new_query = new_query.replace("'None'", "NULL")
+                new_query = new_query.replace("None", "NULL")
                 #print("changed")
                 #print(new_query)
+                #print("\n\n")
                 res = conn.execute(new_query)
 
 

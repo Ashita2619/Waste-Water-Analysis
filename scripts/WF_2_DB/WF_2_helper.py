@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'/home/ssh_user/Documents/GitHub/CRAB_Analysis/scripts')
+sys.path.insert(0,'/home/ssh_user/Documents/GitHub/Waste-Water/scripts')
 from ms_sql_handler import ms_sql_handler
 import pandas as pd
 import cx_Oracle as co
@@ -19,6 +19,10 @@ class demographics_import():
         for item in [*demo_cahce] :
             setattr(self,item, demo_cahce[item])
         
+        self.l=['Lineages_1','Lineages_2','Lineages_3','Lineages_4','Lineages_5','Lineages_6','Lineages_7','Lineages_8','Lineages_9','Lineages_10','Lineages_11','Lineages_12','Lineages_13','Lineages_14','Lineages_15']
+        self.a=['Abundance_1','Abundance_2','Abundance_3','Abundance_4','Abundance_5','Abundance_6','Abundance_7','Abundance_8','Abundance_9','Abundance_10','Abundance_11','Abundance_12','Abundance_13','Abundance_14','Abundance_15']
+        
+        
 
     
     def get_lims_demographics(self,hsn,date): #1
@@ -31,40 +35,40 @@ class demographics_import():
         
         self.lims_df = pd.read_sql(query,conn)   
         
-        print(self.lims_df.to_string())
+        #print(self.lims_df.to_string())
 
         conn.close()
 
         #format LIMS DF
         self.lims_df = self.lims_df.rename(columns = self.demo_names)
-        
+        self.lims_df["WGS_RunDate"] = self.wgs_run_date
         return hsn
     
 
     def create_genes_df(self,path_to_res,runD):
         path_to_res += "/"+runD+"/final/"+runD+"_all.tsv"
 
-        l=['Lineages_1','Lineages_2','Lineages_3','Lineages_4','Lineages_5','Lineages_6','Lineages_7','Lineages_8','Lineages_9','Lineages_10','Lineages_11','Lineages_12','Lineages_13','Lineages_14','Lineages_15']
-        a=['Abundance_1','Abundance_2','Abundance_3','Abundance_4','Abundance_5','Abundance_6','Abundance_7','Abundance_8','Abundance_9','Abundance_10','Abundance_11','Abundance_12','Abundance_13','Abundance_14','Abundance_15']
+
         #open/read file
         all_tsv = pd.read_csv(path_to_res,sep="\t")
         #RENAME AND fix HSN
         all_tsv = all_tsv.rename(columns={'Unnamed: 0':"HSN"})
         all_tsv["HSN"] = [ i.split("_")[0] for i in all_tsv['HSN'].values ]
-
-        num_of_columns = len(all_tsv['lineages'].str.split(' ', n=15, expand=True).columns)
-
+        #print(all_tsv)
+        self.num_of_columns = len(all_tsv['lineages'].str.split(' ', n=15, expand=True).columns)
+        #print(self.num_of_columns)
         #seperate lineage and abundaNCES
-        all_tsv[l[:num_of_columns]] = all_tsv['lineages'].str.split(' ', n=15, expand=True)
-        all_tsv[a[:num_of_columns]] = all_tsv['abundances'].str.split(' ', n=15, expand=True)
-        
+        all_tsv[self.l[:self.num_of_columns]] = all_tsv['lineages'].str.split(' ', n=15, expand=True)
+        all_tsv[self.a[:self.num_of_columns]] = all_tsv['abundances'].str.split(' ', n=15, expand=True)
+        #print(all_tsv.to_string())
        
         #all_tsv = all_tsv[["HSN","coverage"]+l[:num_of_columns]+a[:num_of_columns]]
         #keeping only nessaary columns
-        all_tsv = all_tsv[["HSN"]+l[:num_of_columns]+a[:num_of_columns]]
+        all_tsv = all_tsv[["HSN"]+self.l[:self.num_of_columns]+self.a[:self.num_of_columns]]
 
         self.gene_df = all_tsv
-
+        #print(self.gene_df)
+        print("GENE DF created")
         
         
     
@@ -73,15 +77,17 @@ class demographics_import():
 
         self.lims_df['HSN']=self.lims_df['HSN'].astype(int)
 
-        self.df = pd.merge(self.df, self.gene_df, how="inner", on="HSN")
+        self.gene_df['HSN']=self.gene_df['HSN'].astype(int)
+        
+
+        self.df = pd.merge(self.lims_df, self.gene_df, how="inner", on="HSN")
+        
+        #print(self.df)
 
     
     def format_dfs(self): #4
         self.df = self.df.rename(columns = self.demo_names)
-        #self.log.write_log("format_dfs","Starting")
-        # format columns, insert necessary values
-        #self.log.write_log("format_dfs","Adding/Formatting/Sorting columns")
-        #print(self.df.columns.to_list())
+
         self.df = add_cols(obj=self, \
             df=self.df, \
             col_lst=self.add_col_lst, \
@@ -93,25 +99,24 @@ class demographics_import():
         #self.log.write_log("format_dfs","Done")
     
 
-    def database_push(self, excel_path,runD): #5
+    def database_push(self): #5
         #self.log.write_log("database_push","Starting")
         self.setup_db()
-
-        df_demo_lst = self.df.values.astype(str).tolist()
-       
-        i=0
-        while i < len(df_demo_lst):
         
-            t= df_demo_lst[i][-1].split("%")[0][2:]
-            
-            df_demo_lst[i]= df_demo_lst[i][:-1]+[t]
+        df_demo_lst = self.df.values.astype(str).tolist()
+  
+        for i in range(1,self.num_of_columns+1):
+            self.write_query_tbl1[0]+= ", Lineage_"+str(i)
+            self.write_query_tbl1[1]+= ", '{"+str(i+4)+"}' "
+        for i in range(1,self.num_of_columns+1):
+            self.write_query_tbl1[0]+= ", Abundance_"+str(i)
+            self.write_query_tbl1[1]+= ", {"+str(i+self.num_of_columns+4)+"} "
+            #self.write_query_tbl1[1]+= ", CAST ('{"+str(i+self.num_of_columns+3)+"}', AS DECIMAL) "
 
-            i+=1
-    
-
-        self.write_query_tbl1 = (" ").join(self.write_query_tbl1)
-
-        self.create_ncbi_csv(excel_path,runD,df_demo_lst)
+        self.write_query_tbl1[0]+= ") VALUES"
+        self.write_query_tbl1[1]+= ")" 
+        self.write_query_tbl1 = (" ").join(self.write_query_tbl1) 
+        #print(self.write_query_tbl1)
 
         self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl1)
  

@@ -16,17 +16,8 @@ def DB_push(runner_path,sample_hsn,run_date,outfile_path):
     print("lims imported")
 
     import_demo.create_genes_df(outfile_path,run_date)
-
-    import_demo.merge_dfs()
-
-    '''
     
-    #merge_mlst,demogrpahic DF together
     import_demo.merge_dfs()
+    import_demo.database_push()
 
-    import_demo.format_dfs()
-
-    import_demo.database_push(run_date)
-
-    import_demo.database_push_genes()'''
 
