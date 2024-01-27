@@ -32,14 +32,15 @@ class WasteWater_pipeline_worker():
         run_specfic_data=run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
         #only when data is already downloaded
         #with open(self.cache_path+"/data/run_data.json") as json_file:
-         #   run_specfic_data = json.load(json_file)
+        #    run_specfic_data = json.load(json_file)
+      
         run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_freyja/wasteWater.nf",self.download_path,run_ID,run_specfic_data,self.nextflow_working_dir,self.referance_genome,self.waste_water_output,self.displayed_coverage)
         
         self.remove_nextflow_work()
 
         #PUSH TO DB
         #list of HSN's to know what demographics to pull
-        DB_push(self.cache_path,[*run_specfic_data],run_date,self.waste_water_output)
+        DB_push(self.cache_path,[*run_specfic_data],run_date,self.waste_water_output,run_specfic_data)
         
     def remove_nextflow_work(self):
         

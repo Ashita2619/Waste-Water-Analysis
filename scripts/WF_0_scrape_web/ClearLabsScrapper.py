@@ -59,8 +59,8 @@ class ClearLabsApi():
 		run_sample_info=parse_run_data(self.driver.page_source)
 
 		print("Run Data Captured")
-		
-		self.download_fasta()
+		#print(run_sample_info)
+		#self.download_fasta()
 
 		return run_sample_info
 
@@ -95,23 +95,39 @@ def parse_run_data(run_html):
 	#run_samples= bs.find_all("div", class_="sc-i7x0dw-0 fFrize sc-10cusfd-0 fTCUMn")
 	
 	sample_info={}
-	#for item in run_page.find_all("div", class_="sc-4fik4j-0 kvrlUi sc-1d58pfg-0 zGyGo"):
-	#for item in run_page.find_all("div", class_="sc-4fik4j-0 eKzxwl sc-1d58pfg-0 somVH"):
-	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz ggueUW"):
 
+	#to inculded FAILED samples
+	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz btQXoA"):
+		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
+			#print(item.find(class_="sc-1ydgn5o-0 ixOnpe sc-1cxzq9f-1 ajslC").text)
+			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X
+			cov=item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
+			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
+												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
+																												 item.find(id= re.compile("sequencer")).text, \
+																												 item.find(id= re.compile("avg-q-score")).text, \
+																												 cov[0].text, \
+																												 cov[1].text]
+	#used for regular samples
+	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz ggueUW"):
+		
 	#[position,sampleID, type of analysis, se_coverage,assembly_coverage]
 		#if item.find(class_=sc-1ydgn5o-0 mvkvd sc-1d58pfg-1 jYKIos").text != "—":
 		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
-			#print(item.find(class_="sc-1ydgn5o-0 ixOnpe sc-1cxzq9f-1 ajslC").text)
+			
+			cov=item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
+			#print(item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')[1].text)
+			
 			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X
 			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
 												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
 																												 item.find(id= re.compile("sequencer")).text, \
 																												 item.find(id= re.compile("avg-q-score")).text, \
-																											     item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh").text]
+																												 cov[0].text, \
+																												 cov[1].text ]
 
 
-	#print(sample_info)
+	#print(sample_info)clear
 	return sample_info
 
 
@@ -121,9 +137,9 @@ if __name__ == "__main__":
 
 	s = ClearLabsApi("/home//Downloads","/home//Documents/GitHub/Waste-Water") 				
 	#username #PW
-	s.login("https://wgs.app.stage.clearlabs.com/","","")
+	s.login("https://wgs.app.stage.clearlabs.com/",".","!")
 	time.sleep(10)
-	q= s.find_runs("BHRL")
+	q= s.find_runs("BB01")
 
 	s.driver.close()
 

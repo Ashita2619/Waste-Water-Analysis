@@ -97,32 +97,10 @@ class ms_sql_handler():
             # generate a distinct query for every row, where query stores the
             # generic value
             for i in range(len(df_lst)):
-                # if outside_lab or refresh, we are using full excel file, replace
-                # as needed
-                if full:
-                    df_table_col_lst = list(df.columns)
-                    # remove any columns/entries that are 'nan' or 'None'
-                    element = 0
-                    df_ctr = 0
-                    while element < len(df_table_col_lst):
-                        x = str(df.iloc[i, df_ctr])
-
-                        if x == "nan" or x == "None" or x == "extraction only, WGS" or str(x) == "nan":
-                            self.log.write_warning("removing None/nan","This is being removed   "+x)
-                            del df_table_col_lst[element]
-                            df_ctr += 1
-                        else:
-                            self.log.write_log("This is being kept","Kepping this  "+x)
-                            element += 1
-                            df_ctr += 1
-                    # now, create the col list
-                    df_table_col_query = "(" + ", ".join(df_table_col_lst) + ") "
                 
                 # new_query stores distinct query for the corresponding row
                 new_query = local_query
 
-                if full:
-                    new_query = new_query.replace("{df_table_col_query}", df_table_col_query)
                 # find all unique occurrances of '{/d}' and add them to a list
                 query_track = list(set(re.findall("({.*?})", new_query)))
                 
@@ -130,10 +108,11 @@ class ms_sql_handler():
                 # values in the df_lst
                 try:
                     for item in query_track:
-
+                       
                         #print(item)
                         temp = df_lst[i][int(item[1:-1])].replace("'", "")
-                        #print(temp)
+                        if len(temp) >100:
+                            temp = temp[:100]
                         new_query = new_query.replace(item, temp)
 
                 except IndexError:

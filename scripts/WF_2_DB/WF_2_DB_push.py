@@ -4,7 +4,7 @@ from WF_2_DB.WF_2_helper import demographics_import
 
 
 
-def DB_push(runner_path,sample_hsn,run_date,outfile_path):
+def DB_push(runner_path,sample_hsn,run_date,outfile_path,clearLabsData):
     #assembly metrics contain
 
     #need to open out output CSV files
@@ -13,11 +13,12 @@ def DB_push(runner_path,sample_hsn,run_date,outfile_path):
     import_demo = demographics_import(runner_path)
 
     sample_hsn = import_demo.get_lims_demographics(sample_hsn,run_date)
-    print("lims imported")
-
+    
+    import_demo.create_coverage_df(clearLabsData)
+    
     import_demo.create_genes_df(outfile_path,run_date)
     
-    import_demo.merge_dfs()
+    import_demo.merge_dfs(run_date)
     import_demo.database_push()
 
 

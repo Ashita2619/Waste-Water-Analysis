@@ -23,6 +23,7 @@ def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,
 
 def remove_bad_samples(d_path,path_to_bam_f,run_data):
     for sample in [*run_data]:
+        #print(run_data[sample][-1])
         if run_data[sample][-1] == "0%" or run_data[sample][-1] == "\u2014" or float(run_data[sample][-1][:-1]) <= 5  :
             #then remove/files to failed areas
             print("HSN\t"+sample+" failed or 0 coverage")
