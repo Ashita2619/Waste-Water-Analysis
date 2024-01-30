@@ -130,6 +130,7 @@ dmypy.json
 
 
 # Extras
+**/runner.py
 data/private_var.json
 data/run_data.json
 data/private_cache.json

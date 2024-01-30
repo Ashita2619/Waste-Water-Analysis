@@ -60,7 +60,7 @@ class ClearLabsApi():
 
 		print("Run Data Captured")
 		#print(run_sample_info)
-		#self.download_fasta()
+		self.download_fasta()
 
 		return run_sample_info
 

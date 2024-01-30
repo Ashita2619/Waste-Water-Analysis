@@ -30,6 +30,7 @@ class WasteWater_pipeline_worker():
         run_date= datetime.datetime.strptime(run_ID[7:17], '%Y-%m-%d').strftime("%m%d%y")
         
         run_specfic_data=run_script_0(run_ID,self.cache_path,self.download_path,self.cl_url,self.cl_username,self.cl_pwd)
+        
         #only when data is already downloaded
         #with open(self.cache_path+"/data/run_data.json") as json_file:
         #    run_specfic_data = json.load(json_file)
