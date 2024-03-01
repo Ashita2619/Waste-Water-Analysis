@@ -9,7 +9,10 @@ def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,
 
     print("Removing bad coverage Samples")
     remove_bad_samples(download_path,path_to_bam,run_datas)
-    print(". $CONDA_PREFIX/home/ssh_user/mambaforge/etc/profile.d/conda.sh && conda activate WasteWater && nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate")
+    print("")
+    
+    #print("conda run -n WasteWater nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir)
+    #subprocess.run("export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && conda run -n WasteWater nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir,shell=True)
     #first flow
     subprocess.run(". $CONDA_PREFIX/home/ssh_user/mambaforge/etc/profile.d/conda.sh && conda activate WasteWater && export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
 

@@ -4,7 +4,7 @@ import os
 
 
 
-def run_script_0(run_ids,res_path,download_p,cl_url,cl_username,cl_password):
+def run_script_0(run_ids,res_path,download_p,cl_url,cl_username,cl_password,runDate):
     print("\n================================\nScrape Web Script\n================================\n\n")
     
     #creating WorkflowObj
@@ -14,7 +14,7 @@ def run_script_0(run_ids,res_path,download_p,cl_url,cl_username,cl_password):
     run_info=data_obj.scrape(run_ids,res_path,download_p)
     
     #save run info from var into json file, with name Runid_RunID.json
-    abs_path = res_path + "/data/run_data.json"
+    abs_path = res_path + "/data/"+runDate+"_run_data.json"
 
     with open (abs_path,"w") as j_dump:
         temp_run_info = json.dumps(run_info)

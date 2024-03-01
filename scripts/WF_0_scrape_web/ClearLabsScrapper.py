@@ -48,7 +48,7 @@ class ClearLabsApi():
 	def find_runs(self,runIDs):
 		#change page to list of run pages
 		#//*[@id="app"]/div/div[3]/div[1]/div[1]/nav/ul/li[5]/a/span
-		self.driver.find_element(By.XPATH,"//a[@href='/lab/runs']").click() 
+		self.driver.find_element(By.XPATH,"//a[@href=\"/lab/runs\"]").click() 
 
 		#for run in runIDs:
 			

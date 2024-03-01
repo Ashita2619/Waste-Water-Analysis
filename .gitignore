@@ -134,6 +134,7 @@ dmypy.json
 data/private_var.json
 data/run_data.json
 data/private_cache.json
+data/*_run_data.json
 scripts/__pycache__/
 scripts/WF_0_scrape_web/__pycache__/
 scripts/WF_1_nextflow/__pycache__/
