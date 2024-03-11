@@ -73,8 +73,8 @@ class demographics_import():
         
     def create_coverage_df(self,run_data):
         
-        self.coverage_df = pd.DataFrame.from_dict(run_data, orient="index",columns=["Position","HSN","Machine_ID","Avg_Q_Score","Coverage_10x","Coverage_100x"])
-        self.coverage_df = self.coverage_df[["HSN","Coverage_10x","Coverage_100x"]]
+        self.coverage_df = pd.DataFrame.from_dict(run_data, orient="index",columns=["Position","HSN","Machine_ID","Avg_Q_Score","Coverage_10x"])
+        self.coverage_df = self.coverage_df[["HSN","Coverage_10x"]]
 
         #print(self.coverage_df)
            
@@ -93,7 +93,7 @@ class demographics_import():
         #add summary path
         self.summary_path= self.summary_path+runD
         self.df["PATH_to_Summary"] = self.summary_path
-        #self.df = self.df['HSN', 'Facility', 'Date_Collected', 'Date_Received', 'WGS_RunDate','Lineages_1', 'Lineages_2', 'Lineages_3', 'Lineages_4', 'Lineages_5','Lineages_6', 'Lineages_7', 'Lineages_8', 'Lineages_9', 'Lineages_10','Lineages_11', 'Lineages_12', 'Lineages_13', 'Lineages_14','Lineages_15', 'Abundance_1', 'Abundance_2', 'Abundance_3', 'Abundance_4', 'Abundance_5', 'Abundance_6', 'Abundance_7', 'Abundance_8', 'Abundance_9', 'Abundance_10', 'Abundance_11', 'Abundance_12', 'Abundance_13', 'Abundance_14', 'Abundance_15','Coverage_10x', 'Covergae_100x']
+        #self.df = self.df['HSN', 'Facility', 'Date_Collected', 'Date_Received', 'WGS_RunDate','Lineages_1', 'Lineages_2', 'Lineages_3', 'Lineages_4', 'Lineages_5','Lineages_6', 'Lineages_7', 'Lineages_8', 'Lineages_9', 'Lineages_10','Lineages_11', 'Lineages_12', 'Lineages_13', 'Lineages_14','Lineages_15', 'Abundance_1', 'Abundance_2', 'Abundance_3', 'Abundance_4', 'Abundance_5', 'Abundance_6', 'Abundance_7', 'Abundance_8', 'Abundance_9', 'Abundance_10', 'Abundance_11', 'Abundance_12', 'Abundance_13', 'Abundance_14', 'Abundance_15','Coverage_10x']
         
         
         #print(self.df)
@@ -116,8 +116,8 @@ class demographics_import():
             else:
                 self.write_query_tbl1[1]+= ", {"+str(i+self.num_of_columns+4)+"} "
         
-        self.write_query_tbl1[0]+= ", Coverage_10x, Coverage_100x, PATH_to_Summary) VALUES"
-        self.write_query_tbl1[1]+= ", '{"+str(i+self.num_of_columns+5)+"}', '{"+str(i+self.num_of_columns+6)+"}', '{"+str(i+self.num_of_columns+7)+"}' )" 
+        self.write_query_tbl1[0]+= ", Coverage_10x, PATH_to_Summary) VALUES"
+        self.write_query_tbl1[1]+= ", '{"+str(i+self.num_of_columns+5)+"}', '{"+str(i+self.num_of_columns+6)+"}' )" 
         self.write_query_tbl1 = (" ").join(self.write_query_tbl1) 
         print(self.write_query_tbl1)
 
