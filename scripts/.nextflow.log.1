@@ -1,0 +1,187 @@
+Jul-18 09:26:50.434 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /home/ssh_user/Documents/GitHub/Waste-Water/scripts/WF_1_freyja/wasteWater.nf --in '/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/071624/BB1L13.2024-07-16.01_all_bam_and_index_files/*.bam' --run_date 071624 --ref /home/ssh_user/WGS_Drive/wasteWater/refseq/MN908947_RefSeq.fasta --output_path /home/ssh_user/WGS_Drive/wasteWater/output --cov 5 -w /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/
+Jul-18 09:26:50.542 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 24.04.3
+Jul-18 09:26:50.559 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/ssh_user/.nextflow/plugins; core-plugins: nf-amazon@2.5.2,nf-azure@1.6.0,nf-cloudcache@0.4.1,nf-codecommit@0.2.0,nf-console@1.1.3,nf-ga4gh@1.3.0,nf-google@1.13.2-patch1,nf-tower@1.9.1,nf-wave@1.4.2
+Jul-18 09:26:50.570 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jul-18 09:26:50.571 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jul-18 09:26:50.574 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.10.0 in 'deployment' mode
+Jul-18 09:26:50.584 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jul-18 09:26:50.621 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/ssh_user/.nextflow/secrets/store.json
+Jul-18 09:26:50.629 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@143d9a93] - activable => nextflow.secret.LocalSecretsProvider@143d9a93
+Jul-18 09:26:50.670 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Jul-18 09:26:50.684 [main] DEBUG nextflow.cli.CmdRun - Launching `/home/ssh_user/Documents/GitHub/Waste-Water/scripts/WF_1_freyja/wasteWater.nf` [small_sax] DSL2 - revision: b89ae0f45e
+Jul-18 09:26:50.685 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jul-18 09:26:50.685 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Jul-18 09:26:50.743 [main] DEBUG nextflow.Session - Session UUID: 2398e8ca-574d-4695-9bbc-0c95aea0bc6c
+Jul-18 09:26:50.743 [main] DEBUG nextflow.Session - Run name: small_sax
+Jul-18 09:26:50.744 [main] DEBUG nextflow.Session - Executor pool size: 12
+Jul-18 09:26:50.753 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Jul-18 09:26:50.759 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=36; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Jul-18 09:26:50.780 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 24.04.3 build 5916
+  Created: 09-07-2024 19:35 UTC (14:35 CDT)
+  System: Linux 5.15.0-113-generic
+  Runtime: Groovy 4.0.21 on OpenJDK 64-Bit Server VM 17.0.11-internal+0-adhoc..src
+  Encoding: UTF-8 (UTF-8)
+  Process: 503503@KDHE031075CHHQ2 [127.0.1.1]
+  CPUs: 12 - Mem: 46.8 GB (11.6 GB) - Swap: 2 GB (1.9 GB)
+Jul-18 09:26:50.801 [main] DEBUG nextflow.Session - Work-dir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir [ext2/ext3]
+Jul-18 09:26:50.802 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/ssh_user/Documents/GitHub/Waste-Water/scripts/WF_1_freyja/bin
+Jul-18 09:26:50.809 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jul-18 09:26:50.817 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jul-18 09:26:50.844 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Jul-18 09:26:50.852 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 13; maxThreads: 1000
+Jul-18 09:26:50.919 [main] DEBUG nextflow.Session - Session start
+Jul-18 09:26:51.580 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jul-18 09:26:51.661 [main] INFO  nextflow.script.BaseScript - 071624
+Jul-18 09:26:51.727 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-18 09:26:51.728 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-18 09:26:51.732 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jul-18 09:26:51.737 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=12; memory=46.8 GB; capacity=12; pollInterval=100ms; dumpInterval=5m
+Jul-18 09:26:51.739 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Jul-18 09:26:51.811 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jul-18 09:26:51.811 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jul-18 09:26:51.815 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: create_aggre, create_var, demix, create_graphs
+Jul-18 09:26:51.815 [main] DEBUG nextflow.Session - Igniting dataflow network (3)
+Jul-18 09:26:51.820 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > create_var
+Jul-18 09:26:51.820 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > demix
+Jul-18 09:26:51.821 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_eaa4a1f8c799e0ef: /home/ssh_user/Documents/GitHub/Waste-Water/scripts/WF_1_freyja/wasteWater.nf
+Jul-18 09:26:51.821 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Jul-18 09:26:51.821 [main] DEBUG nextflow.Session - Session await
+Jul-18 09:26:51.822 [PathVisitor-1] DEBUG nextflow.file.PathVisitor - files for syntax: glob; folder: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/071624/BB1L13.2024-07-16.01_all_bam_and_index_files/; pattern: *.bam; options: [:]
+Jul-18 09:26:52.042 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.044 [Task submitter] INFO  nextflow.Session - [74/5072a6] Submitted process > create_var (2730083)
+Jul-18 09:26:52.052 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.053 [Task submitter] INFO  nextflow.Session - [d8/117331] Submitted process > create_var (2735460)
+Jul-18 09:26:52.059 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.060 [Task submitter] INFO  nextflow.Session - [16/1ed8d6] Submitted process > create_var (2719497)
+Jul-18 09:26:52.070 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.071 [Task submitter] INFO  nextflow.Session - [d6/fcf522] Submitted process > create_var (2730084)
+Jul-18 09:26:52.077 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.078 [Task submitter] INFO  nextflow.Session - [43/a20c89] Submitted process > create_var (2730080)
+Jul-18 09:26:52.085 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.086 [Task submitter] INFO  nextflow.Session - [14/dfadfa] Submitted process > create_var (2722577)
+Jul-18 09:26:52.095 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.095 [Task submitter] INFO  nextflow.Session - [68/4754e9] Submitted process > create_var (2735463)
+Jul-18 09:26:52.103 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.120 [Task submitter] INFO  nextflow.Session - [dd/69d5cf] Submitted process > create_var (2735462)
+Jul-18 09:26:52.127 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.141 [Task submitter] INFO  nextflow.Session - [bc/22707f] Submitted process > create_var (2722575)
+Jul-18 09:26:52.148 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.156 [Task submitter] INFO  nextflow.Session - [d0/4b5ece] Submitted process > create_var (2716854)
+Jul-18 09:26:52.169 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.176 [Task submitter] INFO  nextflow.Session - [6d/ac4069] Submitted process > create_var (2730079)
+Jul-18 09:26:52.194 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:26:52.248 [Task submitter] INFO  nextflow.Session - [5a/03095f] Submitted process > create_var (2721390)
+Jul-18 09:27:14.932 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: create_var (2716854); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/d0/4b5ece047dae58f136cc80c0a5a4b9]
+Jul-18 09:27:14.939 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:14.940 [Task submitter] INFO  nextflow.Session - [7c/efdd4a] Submitted process > create_var (2716852)
+Jul-18 09:27:14.943 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=36; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Jul-18 09:27:15.091 [TaskFinalizer-1] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=36; workQueue=LinkedBlockingQueue[10000]; allowCoreThreadTimeout=false
+Jul-18 09:27:19.467 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: create_var (2735460); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/d8/117331490d73fec324c5ab1b822e70]
+Jul-18 09:27:19.473 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:19.479 [Task submitter] INFO  nextflow.Session - [6b/7ca6ba] Submitted process > demix (2716854)
+Jul-18 09:27:22.344 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: create_var (2730079); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/6d/ac4069346f9552cf6b703151a130d8]
+Jul-18 09:27:22.350 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:22.360 [Task submitter] INFO  nextflow.Session - [6f/d97826] Submitted process > demix (2735460)
+Jul-18 09:27:22.493 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: create_var (2735463); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/68/4754e9aa063435b492656c8bc2f4a8]
+Jul-18 09:27:22.503 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:22.530 [Task submitter] INFO  nextflow.Session - [40/53c7db] Submitted process > demix (2730079)
+Jul-18 09:27:23.661 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: create_var (2730084); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/d6/fcf522633f45c7840a399309a94459]
+Jul-18 09:27:23.666 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:23.667 [Task submitter] INFO  nextflow.Session - [6c/35d989] Submitted process > demix (2735463)
+Jul-18 09:27:24.351 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: create_var (2722577); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/14/dfadfa01a4ed18539c29636fab1634]
+Jul-18 09:27:24.355 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:24.367 [Task submitter] INFO  nextflow.Session - [52/73a154] Submitted process > demix (2730084)
+Jul-18 09:27:24.449 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: create_var (2730083); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/74/5072a6e0263eafc96ed284367812ef]
+Jul-18 09:27:24.454 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:24.454 [Task submitter] INFO  nextflow.Session - [7d/2e067a] Submitted process > demix (2722577)
+Jul-18 09:27:25.039 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: create_var (2735462); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/dd/69d5cf32cecffb8ab5e03007333f17]
+Jul-18 09:27:25.044 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:25.045 [Task submitter] INFO  nextflow.Session - [4d/a7a2a0] Submitted process > demix (2730083)
+Jul-18 09:27:25.802 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: create_var (2721390); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/5a/03095fbe8d45aed0d84ffea0c9f6ff]
+Jul-18 09:27:25.807 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:25.809 [Task submitter] INFO  nextflow.Session - [c1/28f1ad] Submitted process > demix (2735462)
+Jul-18 09:27:26.063 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: demix (2716854); status: COMPLETED; exit: 1; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/6b/7ca6ba4819bb9688dffbd4e3d73d7d]
+Jul-18 09:27:26.067 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:26.067 [Task submitter] INFO  nextflow.Session - [9d/c51d06] Submitted process > demix (2721390)
+Jul-18 09:27:26.077 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: demix (2735460); status: COMPLETED; exit: 1; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/6f/d97826060d38f92031862a25403763]
+Jul-18 09:27:26.082 [TaskFinalizer-1] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=demix (2735460); work-dir=/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/6f/d97826060d38f92031862a25403763
+  error [nextflow.exception.ProcessFailedException]: Process `demix (2735460)` terminated with an error exit status (1)
+Jul-18 09:27:26.089 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: create_var (2730080); status: COMPLETED; exit: 0; error: -; workDir: /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/43/a20c89a4f6866c77aca78b64aa4dc6]
+Jul-18 09:27:26.100 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jul-18 09:27:26.101 [Task submitter] INFO  nextflow.Session - [b8/26567c] Submitted process > demix (2730080)
+Jul-18 09:27:26.139 [TaskFinalizer-1] ERROR nextflow.processor.TaskProcessor - Error executing process > 'demix (2735460)'
+
+Caused by:
+  Process `demix (2735460)` terminated with an error exit status (1)
+
+
+Command executed:
+
+  freyja demix 2735460_variant.tsv 2735460_depth --output "2735460.final"
+
+Command exit status:
+  1
+
+Command output:
+  (empty)
+
+Command error:
+  Traceback (most recent call last):
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/pandas/compat/_optional.py", line 135, in import_optional_dependency
+      module = importlib.import_module(name)
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/importlib/__init__.py", line 126, in import_module
+      return _bootstrap._gcd_import(name[level:], package, level)
+    File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+    File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+    File "<frozen importlib._bootstrap>", line 1004, in _find_and_load_unlocked
+  ModuleNotFoundError: No module named 'pyarrow'
+  
+  During handling of the above exception, another exception occurred:
+  
+  Traceback (most recent call last):
+    File "/home/ssh_user/mambaforge/envs/WasteWater/bin/freyja", line 10, in <module>
+      sys.exit(cli())
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/click/core.py", line 1157, in __call__
+      return self.main(*args, **kwargs)
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/click/core.py", line 1078, in main
+      rv = self.invoke(ctx)
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/click/core.py", line 1688, in invoke
+      return _process_result(sub_ctx.command.invoke(sub_ctx))
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/click/core.py", line 1434, in invoke
+      return ctx.invoke(self.callback, **ctx.params)
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/click/core.py", line 783, in invoke
+      return __callback(*args, **kwargs)
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/freyja/_cli.py", line 92, in demix
+      df_barcodes = load_barcodes(barcodes)
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/freyja/utils.py", line 42, in load_barcodes
+      df_barcodes = pd.read_feather(os.path.join(locDir,
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/pandas/io/feather_format.py", line 112, in read_feather
+      import_optional_dependency("pyarrow")
+    File "/home/ssh_user/mambaforge/envs/WasteWater/lib/python3.10/site-packages/pandas/compat/_optional.py", line 138, in import_optional_dependency
+      raise ImportError(msg)
+  ImportError: Missing optional dependency 'pyarrow'.  Use pip or conda to install pyarrow.
+
+Work dir:
+  /home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/6f/d97826060d38f92031862a25403763
+
+Tip: view the complete command output by changing to the process work dir and entering the command `cat .command.out`
+Jul-18 09:27:26.144 [TaskFinalizer-10] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=demix (2716854); work-dir=/home/ssh_user/WGS_Drive/wasteWater/clearLabFiles/nextflow_temp_dir/6b/7ca6ba4819bb9688dffbd4e3d73d7d
+  error [nextflow.exception.ProcessFailedException]: Process `demix (2716854)` terminated with an error exit status (1)
+Jul-18 09:27:26.156 [TaskFinalizer-1] DEBUG nextflow.Session - Session aborted -- Cause: Process `demix (2735460)` terminated with an error exit status (1)
+Jul-18 09:27:26.190 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Jul-18 09:27:26.222 [TaskFinalizer-1] DEBUG nextflow.Session - The following nodes are still active:
+[process] demix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Jul-18 09:27:26.238 [main] DEBUG nextflow.Session - Session await > all processes finished
+Jul-18 09:27:26.238 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jul-18 09:27:26.246 [main] WARN  n.processor.TaskPollingMonitor - Killing running tasks (11)
+Jul-18 09:27:26.510 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=10; failedCount=2; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=1; runningCount=0; retriesCount=0; abortedCount=10; succeedDuration=5m 7s; failedDuration=10.1s; cachedDuration=0ms;loadCpus=-1; loadMemory=0; peakRunning=13; peakCpus=13; peakMemory=0; ]
+Jul-18 09:27:26.518 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Jul-18 09:27:26.528 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
