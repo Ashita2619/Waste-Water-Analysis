@@ -32,7 +32,9 @@ class ClearLabsApi():
 		ChromeDriverPathSer=Service(resource_p+"/resources/chromedriver-linux64/chromedriver")
 
 		self.driver = webdriver.Chrome(service=ChromeDriverPathSer,options=opt)
-		self.driver.implicitly_wait(15)
+		self.driver.implicitly_wait(15) 
+		
+		
 
 
 	def login(self,LoginUrl,email, password): #logs you into the website
@@ -98,34 +100,37 @@ def parse_run_data(run_html):
 
 	#to inculded FAILED samples
 	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz btQXoA"):
+		
 		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
-			#print(item.find(class_="sc-1ydgn5o-0 ixOnpe sc-1cxzq9f-1 ajslC").text)
-			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X
-			
-			cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
-			
-			#print(item.find('[class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]').text)
+			cov= item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
 			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
 												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
 																												 item.find(id= re.compile("sequencer")).text, \
 																												 item.find(id= re.compile("avg-q-score")).text, \
-																												 cov.text
-																												 ]
+																												 cov[0].text,
+																												 cov[1].text
+							#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X,COVERAGE 100X
 			
-	#used for regular samples
+			#cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
+   																								 ]
+			
+	#used for regular samples                   
 	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz ggueUW"):
 		
 	#[position,sampleID, type of analysis, se_coverage,assembly_coverage]
-		#if item.find(class_=sc-1ydgn5o-0 mvkvd sc-1d58pfg-1 jYKIos").text != "—":
+		
 		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
-			cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
-			#print(item.find('[class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]').text)
-			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X
+			#finding both coverage
+			cov= item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
+
+            #cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
+			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X, COVERAGE 100X
 			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
 												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
 																												 item.find(id= re.compile("sequencer")).text, \
 																												 item.find(id= re.compile("avg-q-score")).text, \
-																												 cov.text
+																												 cov[0].text,
+																												 cov[1].text
 																												 ]
 			
 

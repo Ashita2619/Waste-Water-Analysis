@@ -40,7 +40,8 @@ class WasteWater_pipeline_worker():
         #only when data is already downloaded
         #with open(self.cache_path+"/data/run_data.json") as json_file:
         #    run_specfic_data = json.load(json_file)
-      
+
+        # Run Freyja script
         run_script_nextflow(run_date,self.cache_path+"/scripts/WF_1_freyja/wasteWater.nf",self.download_path,run_ID,run_specfic_data,self.nextflow_working_dir,self.referance_genome,self.waste_water_output,self.displayed_coverage)
         
         self.remove_nextflow_work()
@@ -49,12 +50,31 @@ class WasteWater_pipeline_worker():
         #list of HSN's to know what demographics to pull
         DB_push(self.cache_path,[*run_specfic_data],run_date,self.waste_water_output,run_specfic_data)
         
+        # #Uncomment this if its not a full run of 16 samples
+        # # Filter out invalid samples (e.g., Blank1 and Blank2)
+        # valid_samples = self.filter_valid_samples(run_specfic_data)
+
+        # # Push only valid samples to the database
+        # self.push_valid_samples_to_db(valid_samples,run_date, run_specfic_data)
+        
     def remove_nextflow_work(self):
         
         if os.path.exists(self.nextflow_working_dir):
             subprocess.run("rm -r "+self.nextflow_working_dir,shell=True)
             print("Removing Nextflow WorkDir")
-            
+
+# Uncomment this if its not a full run of 16 samples
+    # def filter_valid_samples(self, run_specfic_data):
+    #     # Filter out Blank1 and Blank2 samples or any other invalid samples
+    #     valid_samples = [sample for sample in run_specfic_data if sample not in ['Blank1', 'Blank2']]
+    #     return valid_samples
+    
+    # def push_valid_samples_to_db(self, valid_samples, run_date, run_specfic_data):
+    #     # Assuming you have a function to push data to the database
+    #     for sample_id in valid_samples:
+    #         # Push sample data to the database
+    #         DB_push(self.cache_path, [sample_id], run_date, self.waste_water_output, run_specfic_data)
+
 
 
 if __name__ == "__main__":
