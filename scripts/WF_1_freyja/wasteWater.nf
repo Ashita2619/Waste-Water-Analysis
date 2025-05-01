@@ -67,22 +67,23 @@ process create_aggre{
 	"""
 }
 
-process create_graphs{
-	publishDir "${params.output_path}/${params.run_date}/final", mode:'copy'
-	
-	input:
-		path demix_out
-		val run_date
-		val cov
+process create_graphs {
+    publishDir "${params.output_path}/${params.run_date}/final", mode: 'copy'
+    
+    input:
+    path demix_out
+    val run_date
+    val cov
 
-	output:
-		file "${run_date}.pdf"
+    output:
+    file "${run_date}.pdf"
 
-	script:
-	"""
-	freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf"
-	"""
+    script:
+    """
+    freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf" --config "/epi/home/ssh_user/mambaforge/pkgs/freyja-1.5.1-pyhdfd78af_0/site-packages/freyja/data/plot_config.yml"
+    """
 }
+
 
 workflow final_step{
 	//agreeate all variant files into one
