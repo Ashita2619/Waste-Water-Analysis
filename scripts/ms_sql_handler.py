@@ -1,11 +1,13 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import re
 import time
 import sys
 import pandas as pd
 import re
 
+import warnings
 
+warnings.filterwarnings('ignore')
 
 #Table = "dbo.Results"
 #Table = "dbo.Run_Stats"
@@ -38,27 +40,27 @@ class ms_sql_handler():
             query = "DELETE FROM dbo.Results"
             res = conn.execute(query)
             query = "DELETE FROM dbo.Run_Stats"
-            res = conn.execute(query)
+            res = conn.execute(text(query))
         #self.logger.info("refresh: database_clear finished!")
     
 
     # Read
     def ss_read(self, query=None):
         with self.engine.connect() as conn:
-            df = pd.read_sql(query, con=self.engine)
+            df = pd.read_sql(text(query), con=self.engine)
         return df
 
     def sub_read(self, query=None):
         #local_query = query.replace("{avg_depth_cutoff}", str(self.avg_depth_cutoff))
         #local_query = local_query.replace("{percent_cvg_cutoff}", str(self.percent_cvg_cutoff))
-        df = pd.read_sql(query, con=self.engine)
+        df = pd.read_sql(text(query), con=self.engine)
         return df
 
     def sub_lst_read(self, query=None, lst=None):
         hsn_query = "(" + ", ".join(lst) + ")"
         local_query = query.replace("{hsn_query}", hsn_query)
         # create dataframe that has structure of table_1 but only includes HSNs from GISAID.xlsx
-        df = pd.read_sql(local_query, con=self.engine)
+        df = pd.read_sql(text(local_query), con=self.engine)
         return df
 
 
@@ -78,7 +80,7 @@ class ms_sql_handler():
                 df_lst[i] = format_lst(df_lst[i])
                 df_lst_query = "(" + ", ".join(df_lst[i]) + ")"
                 query = f"""INSERT INTO dbo.Run_Stats {df_cols} VALUES {df_lst_query}"""
-                res = conn.execute(query)
+                res = conn.execute(text(query))
 
     def lst_ptr_push(self, df_lst=None, query=None, full=False, df=None):
         """
@@ -94,53 +96,79 @@ class ms_sql_handler():
         print("trying to connect to sql")
         with self.engine.connect() as conn:
             print("connection passed!")
-            # generate a distinct query for every row, where query stores the
-            # generic value
-            for i in range(len(df_lst)):
-                
-                # new_query stores distinct query for the corresponding row
-                new_query = local_query
 
-                # find all unique occurrances of '{/d}' and add them to a list
-                query_track = list(set(re.findall("({.*?})", new_query)))
-                
-                # replace all occurrances of '{\d}' with the corresponding
-                # values in the df_lst
-                try:
-                    for item in query_track:
-                       
-                        #print(item)
-                        temp = df_lst[i][int(item[1:-1])].replace("'", "")
-                        if len(temp) >100:
-                            temp = temp[:100]
-                        new_query = new_query.replace(item, temp)
+            # Start a manual transaction
+            with conn.begin():  # This will ensure that the commit is done only after the loop
+                # generate a distinct query for every row, where query stores the
+                # generic value
+                for i in range(len(df_lst)):
+                    # if outside_lab or refresh, we are using full excel file, replace
+                    # as needed
+                    if full and df is not None:
+                        df_table_col_lst = list(df.columns)
+                        # remove any columns/entries that are 'nan' or 'None'
+                        element = 0
+                        df_ctr = 0
+                        while element < len(df_table_col_lst):
+                            x = str(df.iloc[i, df_ctr])
 
-                except IndexError:
-                    pass
-                # if outside_lab or refresh, we are using full excel file, replace
-                # missing data as needed
+                            if x in ["nan","None","extraction only, WGS"] or str(x) == "nan":
+                                self.log.write_warning("removing None/nan","This is being removed   "+x)
+                                del df_table_col_lst[element]
+                                df_ctr += 1
+                            else:
+                                self.log.write_log("This is being kept","Kepping this  "+x)
+                                element += 1
+                                df_ctr += 1
+                        # now, create the col list
+                        df_table_col_query = "(" + ", ".join(df_table_col_lst) + ") "
 
-                #print(new_query)
-                #new_query = new_query.replace("\'", "")
-                new_query = new_query.replace("CAST ('None', AS DECIMAL)", "NULL")
-                new_query = new_query.replace("CAST ('NULL', AS DECIMAL)", "NULL")
-                new_query = new_query.replace(" \'nan\'", "NULL")
-                new_query = new_query.replace(" nan", "NULL")
-                #new_query = new_query.replace(", \'None\'", "")
-                new_query = new_query.replace("= ,", "= NULL,")
-                new_query = new_query.replace("= '',", "= NULL,")
-                new_query = new_query.replace('= "",', '= NULL,')
-                new_query = new_query.replace("= \'None\',", "= NULL,")
-                new_query = new_query.replace("CAST('nan' AS DATE)", "NULL")
-                new_query = new_query.replace("CAST('NULL' AS DATE)", "NULL")
-                new_query = new_query.replace("CAST (NULL, as FLOAT)", "NULL")
-                new_query = new_query.replace("CAST ('NULL', as FLOAT)", 'NULL')
-                new_query = new_query.replace("'None'", "NULL")
-                new_query = new_query.replace("None", "NULL")
-                #print("changed")
-                #print(new_query)
-                #print("\n\n")
-                res = conn.execute(new_query)
+                    # new_query stores distinct query for the corresponding row
+                    new_query = local_query
+
+                    if full:
+                        new_query = new_query.replace("{df_table_col_query}", df_table_col_query)
+                    # find all unique occurrances of '{/d}' and add them to a list
+                    query_track = list(set(re.findall("({.*?})", new_query)))
+
+                    # replace all occurrances of '{\d}' with the corresponding
+                    # values in the df_lst
+                    try:
+                        #print(df_lst[i])
+                        for item in query_track:
+                            temp = df_lst[i][int(item[1:-1])].replace("'", "")
+                            new_query = new_query.replace(item, temp)
+                    except IndexError:
+                        pass
+                    # if outside_lab or refresh, we are using full excel file, replace
+                    # missing data as needed
+                    if full:
+                        new_query = new_query.replace(", CAST(\'nan\' AS DATE)", "")
+                        new_query = new_query.replace(", CAST(\'None\' AS DATE)", "")
+                        new_query = new_query.replace(", \'nan\'", "")
+                        new_query = new_query.replace(", \'None\'", "")
+                        new_query = new_query.replace(", nan", "")
+                        new_query = new_query.replace(", None", "")
+                        new_query = new_query.replace(", \'extraction only, WGS\'", "")
+                        new_query = new_query.replace("other", "OT")
+                        new_query = new_query.replace("(, ", "(")
+                        new_query = new_query.replace(" KS", " Kansas")
+                    new_query = new_query.replace(" \'nan\'", "NULL")
+                    new_query = new_query.replace(" nan", "NULL")
+                    new_query = new_query.replace("= ,", "= NULL,")
+                    new_query = new_query.replace("= '',", "= NULL,")
+                    new_query = new_query.replace('= "",', '= NULL,')
+                    new_query = new_query.replace("= \'None\',", "= NULL,")
+                    new_query = new_query.replace("CAST('nan' AS DATE)", "NULL")
+                    new_query = new_query.replace("luke's", 'lukes')
+                    new_query = new_query.replace("'None'", "NULL")
+                    new_query = new_query.replace("None", "NULL")
+
+                    # Execute the query for this row
+                    res = conn.execute(text(new_query))
+            
+            # Commit the transaction at the end
+            # No need to explicitly call conn.commit() if you're using the 'with conn.begin()' block
 
 
 def format_lst(lst):
