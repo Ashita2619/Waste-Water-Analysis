@@ -89,53 +89,102 @@ class ClearLabsApi():
 		self.driver.quit()
 
 def parse_run_data(run_html):
+    run_page = bs(run_html, "html.parser")
+    sample_info = {}
 
-	run_page= bs(run_html,"html.parser")
+    # Combine both failed and regular sample divs
+    sample_blocks = run_page.find_all("div", class_=re.compile("sc-9p7gfl-0"))
+
+    for item in sample_blocks:
+        try:
+            # Get sample ID and position
+            position_elem = item.find("div", class_=re.compile("jRuGMk|jRuGMm"))
+            sample_id_elem = item.find("div", class_=re.compile("jRuGMm"))
+
+            if not position_elem or not sample_id_elem:
+                continue
+
+            if sample_id_elem.text.strip() == "—":
+                continue
+
+            position = position_elem.text.strip()
+            sample_id = sample_id_elem.text.strip()
+
+            # Get sequencer and avg-q-score
+            sequencer_elem = item.find(id=re.compile("sequencer", re.IGNORECASE))
+            qscore_elem = item.find(id=re.compile("avg-q-score", re.IGNORECASE))
+
+            sequencer = sequencer_elem.text.strip() if sequencer_elem else "N/A"
+            avg_q_score = qscore_elem.text.strip() if qscore_elem else "N/A"
+
+            # Get coverage values
+            coverage_elems = item.find_all("div", class_="sc-1tsmysq-0 sc-1ydgn5o-3 jRuGMl bdVhKT sc-9bmcrn-1 fkIweP")
+            coverage_10x = coverage_elems[0].text.strip() if len(coverage_elems) > 0 else "N/A"
+            coverage_100x = coverage_elems[1].text.strip() if len(coverage_elems) > 1 else "N/A"
+
+            # Store in dictionary
+            sample_info[sample_id] = [
+                position,
+                sample_id,
+                sequencer,
+                avg_q_score,
+                coverage_10x,
+                coverage_100x
+            ]
+
+        except Exception as e:
+            print(f"[WARN] Skipping sample block due to error: {e}")
+
+    return sample_info
+
+# def parse_run_data(run_html):
+
+# 	run_page= bs(run_html,"html.parser")
 	
-	#finds all samples
+# 	#finds all samples
 
-	#run_samples= bs.find_all("div", class_="sc-i7x0dw-0 fFrize sc-10cusfd-0 fTCUMn")
+# 	#run_samples= bs.find_all("div", class_="sc-i7x0dw-0 fFrize sc-10cusfd-0 fTCUMn")
 	
-	sample_info={}
+# 	sample_info={}
 
-	#to inculded FAILED samples
-	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz btQXoA"):
+# 	#to inculded FAILED samples
+# 	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz btQXoA"):
 		
-		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
-			cov= item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
-			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
-												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
-																												 item.find(id= re.compile("sequencer")).text, \
-																												 item.find(id= re.compile("avg-q-score")).text, \
-																												 cov[0].text,
-																												 cov[1].text
-							#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X,COVERAGE 100X
+# 		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
+# 			cov= item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
+# 			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
+# 												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
+# 																												 item.find(id= re.compile("sequencer")).text, \
+# 																												 item.find(id= re.compile("avg-q-score")).text, \
+# 																												 cov[0].text,
+# 																												 cov[1].text
+# 							#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X,COVERAGE 100X
 			
-			#cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
-   																								 ]
+# 			#cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
+#    																								 ]
 			
-	#used for regular samples                   
-	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz ggueUW"):
+# 	#used for regular samples                   
+# 	for item in run_page.find_all("div", class_="sc-9p7gfl-0 sc-4fik4j-1 sc-9bmcrn-0 GBEIg cNTRpz ggueUW"):
 		
-	#[position,sampleID, type of analysis, se_coverage,assembly_coverage]
+# 	#[position,sampleID, type of analysis, se_coverage,assembly_coverage]
 		
-		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
-			#finding both coverage
-			cov= item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
+# 		if item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text != "—":
+# 			#finding both coverage
+# 			cov= item.select('[class*="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxL dMUdxZ sc-9bmcrn-1 gMRTTh"]')
 
-            #cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
-			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X, COVERAGE 100X
-			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
-												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
-																												 item.find(id= re.compile("sequencer")).text, \
-																												 item.find(id= re.compile("avg-q-score")).text, \
-																												 cov[0].text,
-																												 cov[1].text
-																												 ]
+#             #cov=item.select_one(".sc-1tsmysq-0.sc-1ydgn5o-3.bLIfxR.dMUdxZ.sc-9bmcrn-1.gMRTTh")
+# 			#hsn: postion,hsn,analysus_type, SEQUENCER_AVG_QSCORE, COVERAGE 10X, COVERAGE 100X
+# 			sample_info[item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text] = [ item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxK dMUdxZ sc-9bmcrn-1 gMRTTh").text , \
+# 												       															 item.find(class_="sc-1tsmysq-0 sc-1ydgn5o-3 bLIfxQ dMUdxZ sc-9bmcrn-1 gMRTTh").text, \
+# 																												 item.find(id= re.compile("sequencer")).text, \
+# 																												 item.find(id= re.compile("avg-q-score")).text, \
+# 																												 cov[0].text,
+# 																												 cov[1].text
+# 																												 ]
 			
 
-	#print(sample_info)clear
-	return sample_info
+# 	#print(sample_info)clear
+# 	return sample_info
 
 
 
