@@ -4,22 +4,26 @@ import os
 
 
 
-def run_script_0(run_ids,res_path,download_p,cl_url,cl_username,cl_password,runDate):
+def run_script_0(run_ids, res_path, download_p, cl_url, cl_username, cl_password, runDate):
     print("\n================================\nScrape Web Script\n================================\n\n")
-    
-    #creating WorkflowObj
-    data_obj = WF_0_ClearLabs(cl_url,cl_username,cl_password)
 
-    #save run info into var, while downloading fasta files for each run id supplied
-    run_info=data_obj.scrape(run_ids,res_path,download_p)
-    
-    #save run info from var into json file, with name Runid_RunID.json
-    abs_path = res_path + "/data/"+runDate+"_run_data.json"
+    # Create ClearLabs scraper object
+    data_obj = WF_0_ClearLabs(cl_url, cl_username, cl_password)
 
-    with open (abs_path,"w") as j_dump:
-        temp_run_info = json.dumps(run_info)
-        j_dump.write(temp_run_info)
-    
+    # Get run information
+    run_info = data_obj.scrape(run_ids, res_path, download_p)
+
+    # Remove unwanted "Sample ID" key if present
+    run_info.pop("Sample ID", None)
+
+    # Build output path
+    abs_path = os.path.join(res_path, "data", f"{runDate}_run_data.json")
+
+    # Save to JSON file in compact (one-line-per-entry) format
+    with open(abs_path, "w") as j_dump:
+        json.dump(run_info, j_dump, separators=(',', ':'))
+
+    # Close browser/session/etc.
     data_obj.close_conns()
 
     return run_info
