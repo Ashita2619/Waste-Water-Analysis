@@ -94,12 +94,15 @@ def parse_run_data(run_html):
 
     # Combine both failed and regular sample divs
     sample_blocks = run_page.find_all("div", class_=re.compile("sc-9p7gfl-0"))
+    #sample_blocks = run_page.find_all("div", class_=re.compile("sc-49hmn9-0"))
 
     for item in sample_blocks:
         try:
             # Get sample ID and position
-            position_elem = item.find("div", class_=re.compile("jRuGMk|jRuGMm"))
-            sample_id_elem = item.find("div", class_=re.compile("jRuGMm"))
+            position_elem = item.find("div", class_=re.compile("leodpM"))
+            sample_id_elem = item.find("div", class_=re.compile("dANGPq"))
+            #position_elem = item.find("div", class_=re.compile("hLYmxs"))
+            #sample_id_elem = item.find("div", class_=re.compile("hLYmxs"))
 
             if not position_elem or not sample_id_elem:
                 continue
@@ -118,7 +121,8 @@ def parse_run_data(run_html):
             avg_q_score = qscore_elem.text.strip() if qscore_elem else "N/A"
 
             # Get coverage values
-            coverage_elems = item.find_all("div", class_="sc-1tsmysq-0 sc-1ydgn5o-3 jRuGMl bdVhKT sc-9bmcrn-1 fkIweP")
+            coverage_elems = item.find_all("div", class_="sc-1ydgn5o-3 ePCcet sc-9bmcrn-1 jZpCjj")
+            #coverage_elems = item.find_all("div", class_="sc-1ejt0r8-3 hLhdoA sc-wxx6pe-1 hLYmxs")
             coverage_10x = coverage_elems[0].text.strip() if len(coverage_elems) > 0 else "N/A"
             coverage_100x = coverage_elems[1].text.strip() if len(coverage_elems) > 1 else "N/A"
 
