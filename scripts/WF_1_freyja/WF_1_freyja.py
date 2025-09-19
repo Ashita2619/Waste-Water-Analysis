@@ -25,19 +25,25 @@ def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,
     print("\n================================\nSUCCESS - END OF SCRIPT\n================================\n\n")
 
 
-
 def remove_bad_samples(d_path, path_to_bam_f, run_data):
-    failed_dir = os.path.join(d_path, "failed")
-    print(failed_dir)
-    if not os.path.exists(failed_dir):
-        os.makedirs(failed_dir)
-    
-    for sample in [*run_data]:
+    failed_dir = os.path.join(d_path, "failed_samples")
+    os.makedirs(failed_dir, exist_ok=True)
+
+    for sample in run_data:
         coverage_status = run_data[sample][-1]
-        #print(f"Checking sample: {sample}, Coverage: {coverage_status}")
-        if coverage_status == "0%" or coverage_status == "\u2014" or float(coverage_status[:-1]) <= 15:
-            try:
-                # Use glob to find all matching files
+
+        try:
+            # Normalize and validate coverage string
+            if coverage_status in ["0%", "—"]:
+                low_coverage = True
+            elif coverage_status.endswith("%"):
+                coverage_value = float(coverage_status.rstrip("%"))
+                low_coverage = coverage_value <= 15
+            else:
+                print(f"Skipping sample {sample}: invalid coverage format '{coverage_status}'")
+                continue
+
+            if low_coverage:
                 src_files = glob.glob(os.path.join(path_to_bam_f, f"{sample}*"))
                 if not src_files:
                     print(f"No files found for sample: {sample}")
@@ -45,9 +51,29 @@ def remove_bad_samples(d_path, path_to_bam_f, run_data):
                     print(f"Moving {src_file} to {failed_dir}")
                     shutil.move(src_file, failed_dir)
                 print(f"Successfully moved {sample} to failed directory.")
-            except Exception as e:
-                print(f"Error moving {sample}: {e}")
+
+        except Exception as e:
+            print(f"Error processing sample {sample}: {e}")
+
     print("Continuing with Nextflow")
+
+#def remove_bad_samples(d_path,path_to_bam_f,run_data):
+    #for sample in [*run_data]:
+        #coverage_status = run_data[sample][-1]
+        #print(f"Checking sample: {sample}, Coverage: {coverage_status}")
+        #if coverage_status == "0%" or coverage_status == "\u2014" or float(coverage_status[:-1]) <= 15:
+            #try:
+                # Use glob to find all matching files
+             #   src_files = glob.glob(os.path.join(path_to_bam_f, f"{sample}*"))
+              #  if not src_files:
+               #     print(f"No files found for sample: {sample}")
+                #for src_file in src_files:
+                 #   print(f"Moving {src_file} to {failed_dir}")
+                  #  shutil.move(src_file, failed_dir)
+                #print(f"Successfully moved {sample} to failed directory.")
+            #except Exception as e:
+             #   print(f"Error moving {sample}: {e}")
+    #print("Continuing with Nextflow")
 
 
 
