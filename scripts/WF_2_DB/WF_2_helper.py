@@ -35,7 +35,6 @@ class demographics_import():
         
         self.lims_df = pd.read_sql(query,conn)   
         print("lims imported")
-        #print(self.lims_df.to_string())
 
         conn.close()
 
@@ -68,13 +67,13 @@ class demographics_import():
         all_tsv = all_tsv[["HSN"]+self.l[:self.num_of_columns]+self.a[:self.num_of_columns]]
 
         self.gene_df = all_tsv
-        #print(self.gene_df)
         print("GENE DF created")
         
     def create_coverage_df(self,run_data):
         
         self.coverage_df = pd.DataFrame.from_dict(run_data, orient="index",columns=["Position","HSN","Machine_ID","Avg_Q_Score","Coverage_10x","Coverage_100x"])
         self.coverage_df = self.coverage_df[["HSN","Coverage_10x","Coverage_100x"]]
+        
 
 
 # Uncomment this if its not a full run of 16 samples
@@ -99,6 +98,7 @@ class demographics_import():
         #add summary path
         self.summary_path= self.summary_path+runD
         self.df["PATH_to_Summary"] = self.summary_path
+        
 
 # Uncomment this if its not a full run of 16 samples
     # def merge_dfs(self,runD):  #4
@@ -118,8 +118,6 @@ class demographics_import():
     #     self.df["PATH_to_Summary"] = self.summary_path
         
 
-
-
     def database_push(self): #5
         #self.log.write_log("database_push","Starting")
         self.setup_db()
@@ -127,19 +125,27 @@ class demographics_import():
         df_demo_lst = self.df.values.astype(str).tolist()
         
         for i in range(1,self.num_of_columns+1):
-            self.write_query_tbl1[0]+= ", Lineage_"+str(i)
-            self.write_query_tbl1[1]+= ", '{"+str(i+4)+"}' "
+            self.write_query_tbl1[0] += f", Lineage_"+str(i)
+            #self.write_query_tbl1[1] += f", '{"+str(i+4)+"}' "
         for i in range(1,self.num_of_columns+1):
-            self.write_query_tbl1[0]+= ", Abundance_"+str(i)
-            if i == 15:
-                self.write_query_tbl1[1]+= ", '{"+str(i+self.num_of_columns+4)+"}' "
-            else:
-                self.write_query_tbl1[1]+= ", {"+str(i+self.num_of_columns+4)+"} "
+            self.write_query_tbl1[0]+= f", Abundance_"+str(i)
+            #if i == 15:
+                #self.write_query_tbl1[1]+= ", '{"+str(i+self.num_of_columns+4)+"}' "
+            #else:
+                #self.write_query_tbl1[1]+= ", {"+str(i+self.num_of_columns+4)+"} "
+                
+        self.write_query_tbl1[0] += ", Coverage_10x, Coverage_100x, PATH_to_Summary) VALUES "
+
         
-        self.write_query_tbl1[0]+= ", Coverage_10x, Coverage_100x, PATH_to_Summary) VALUES"
-        self.write_query_tbl1[1]+= ", '{"+str(i+self.num_of_columns+5)+"}', '{"+str(i+self.num_of_columns+6)+"}', '{"+str(i+self.num_of_columns+7)+"}' )" 
-        self.write_query_tbl1 = (" ").join(self.write_query_tbl1) 
-        print(self.write_query_tbl1)
+        # Now build the Values part with conistent quoting
+        placeholders = []
+        for i in range(len(self.df.columns)):
+            placeholders.append(f"'{{{i}}}'")
+            
+        self.write_query_tbl1[1]= f"({','.join(placeholders)})"
+        #self.write_query_tbl1[1]+= ", '{"+str(i+self.num_of_columns+5)+"}', '{"+str(i+self.num_of_columns+6)+"}', '{"+str(i+self.num_of_columns+7)+"}' )" 
+        self.write_query_tbl1 = " ".join(self.write_query_tbl1) 
+        print("Final query: ", self.write_query_tbl1)
 
         self.db_handler.lst_ptr_push(df_lst=df_demo_lst, query=self.write_query_tbl1)
  
@@ -155,4 +161,5 @@ if __name__ == "__main__":
     
     import_demo = demographics_import("/epi/home/ssh_user/Documents/GitHub/CRAB_Analysis")
     sample_hsn = import_demo.get_lims_demographics(['2434975','2445821','2468507','2488768','2492075','2506355','2510743','2527973'],"111323","/epi/home/ssh_user/WGS_Drive/CRAB_WGS_Sequencing")
+
         
