@@ -27,7 +27,15 @@ class WasteWater_pipeline_worker():
     
 
     def wastewater_pipeline(self,run_ID):
-        run_date= datetime.datetime.strptime(run_ID[7:17], '%Y-%m-%d').strftime("%m%d%y")
+        # Use only the filename part in case a full path is passed
+        run_ID_filename = os.path.basename(run_ID)
+
+        # Safely extract date from the filename
+        try:
+            run_date = datetime.datetime.strptime(run_ID_filename[7:17], '%Y-%m-%d').strftime("%m%d%y")
+        except Exception as e:
+            raise ValueError(f"Failed to extract date from run_ID '{run_ID_filename}': {e}")
+        #run_date= datetime.datetime.strptime(run_ID[7:17], '%Y-%m-%d').strftime("%m%d%y")
 
         #If clear labs files already on machine will not re-download
         if os.path.exists(self.cache_path+"/data/"+run_date+"_run_data.json"):
