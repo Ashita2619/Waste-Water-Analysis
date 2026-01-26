@@ -159,7 +159,7 @@ class demographics_import():
 
 if __name__ == "__main__":
     
-    import_demo = demographics_import("/epi/home/ssh_user/Documents/GitHub/CRAB_Analysis")
+    import_demo = demographics_import("/epi/home/ashita.jawali@kdhe.state.ks.us/Documents/GitHub/Waste-Water")
     sample_hsn = import_demo.get_lims_demographics(['2434975','2445821','2468507','2488768','2492075','2506355','2510743','2527973'],"111323","/epi/home/ssh_user/WGS_Drive/CRAB_WGS_Sequencing")
 
         
