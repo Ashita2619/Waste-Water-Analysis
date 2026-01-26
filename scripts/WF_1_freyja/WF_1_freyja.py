@@ -16,10 +16,10 @@ def run_script_nextflow(runDate,path_to_nextflow,download_path,run_id,run_datas,
     #subprocess.run("export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && conda run -n WasteWater nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir,shell=True)
     #first flow
     conda_path = "/epi/home/ssh_user/mambaforge/etc/profile.d/conda.sh"
-    subprocess.run(f"export TERM=linux && export CURL_CA_BUNDLE=/epi/home/ssh_user/mambaforge/envs/nextflow/ssl/cacert.pem && . {conda_path} && conda activate WasteWater && export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
+    subprocess.run(f"export TERM=linux && export CURL_CA_BUNDLE=/epi/home/ashita.jawali@kdhe.state.ks.us/mambaforge/envs/nextflow/ssl/cacert.pem && . {conda_path} && conda activate WasteWater && export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && nextflow run "+path_to_nextflow+" --in '"+path_to_bam+"/*.bam' --run_date '"+runDate+"' --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
 
     #second flow
-    subprocess.run(f"export TERM=linux && export CURL_CA_BUNDLE=/epi/home/ssh_user/mambaforge/envs/nextflow/ssl/cacert.pem && . {conda_path} && conda activate WasteWater && export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && nextflow run "+path_to_nextflow+" -entry final_step --run_date "+runDate+" --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
+    subprocess.run(f"export TERM=linux && export CURL_CA_BUNDLE=/epi/home/ashita.jawali@kdhe.state.ks.us/mambaforge/envs/nextflow/ssl/cacert.pem && . {conda_path} && conda activate WasteWater && export NXF_DISABLE_PARAMS_TYPE_DETECTION=true && nextflow run "+path_to_nextflow+" -entry final_step --run_date "+runDate+" --ref "+ref_genome+" --output_path "+output_path+" --cov "+coverage+" -w "+nextflow_workdir+" && source deactivate",shell=True)
 
 
     print("\n================================\nSUCCESS - END OF SCRIPT\n================================\n\n")
