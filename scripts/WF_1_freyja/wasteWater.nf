@@ -80,7 +80,7 @@ process create_graphs {
 
     script:
     """
-    freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf" --config "/epi/home/ssh_user/mambaforge/pkgs/freyja-1.5.1-pyhdfd78af_0/site-packages/freyja/data/plot_config.yml"
+    freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf" --config "/epi/home/ashita.jawali@kdhe.state.ks.us/mambaforge/pkgs/freyja-1.5.1-pyhdfd78af_0/site-packages/freyja/data/plot_config.yml"
     """
 }
 
