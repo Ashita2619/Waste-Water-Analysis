@@ -195,7 +195,7 @@ def parse_run_data(run_html):
 
 if __name__ == "__main__":
 
-	s = ClearLabsApi("/home//Downloads","/home//Documents/GitHub/Waste-Water") 				
+	s = ClearLabsApi("/epi/home//Downloads","/epi/home//Documents/GitHub/Waste-Water") 				
 	#username #PW
 	s.login("https://wgs.app.stage.clearlabs.com/",".","!")
 	time.sleep(10)
