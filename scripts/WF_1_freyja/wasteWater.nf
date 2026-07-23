@@ -63,7 +63,7 @@ process create_aggre{
 
 	script:
 	"""
-	freyja aggregate "${demix_out}/${run_date}/final/" --output "${run_date}_all.tsv"
+	freyja aggregate "${demix_out}/${run_date}/final/" --ext tsv --output "${run_date}_all.tsv"
 	"""
 }
 
@@ -80,7 +80,7 @@ process create_graphs {
 
     script:
     """
-    freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf" --config "/epi/home/ashita.jawali@kdhe.state.ks.us/mambaforge/pkgs/freyja-1.5.1-pyhdfd78af_0/site-packages/freyja/data/plot_config.yml"
+    freyja plot "${run_date}_all.tsv" --mincov "${cov}" --output "${run_date}.pdf" --config "/epi/home/ashita.jawali@kdhe.state.ks.us/mambaforge/pkgs/Freyja-2.0.3/freyja/data/plot_config.yml"
     """
 }
 
